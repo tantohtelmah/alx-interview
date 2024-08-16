@@ -2,9 +2,8 @@
 """
 parse line
 """
-
-
 import sys
+
 
 def parse_line(line):
     """ parse line """
@@ -14,6 +13,7 @@ def parse_line(line):
         return int(status_code), int(file_size)
     except ValueError:
         return None, None
+
 
 def main():
     """ Main Function"""
@@ -26,7 +26,8 @@ def main():
             status_code, file_size = parse_line(line)
             if status_code is not None:
                 total_size += file_size
-                status_counts[status_code] = status_counts.get(status_code, 0) + 1
+                status_counts[status_code] = status_counts.get(status_code,
+                                                               0) + 1
 
             if i % 10 == 0:
                 print(f"Total file size: {total_size}")
@@ -35,6 +36,7 @@ def main():
 
     except KeyboardInterrupt:
         print("\nKeyboard interruption detected. Exiting...")
+
 
 if __name__ == "__main__":
     main()
