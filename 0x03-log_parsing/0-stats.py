@@ -30,12 +30,12 @@ def main():
                                                                0) + 1
 
             if i % 10 == 0:
-                print(f"Total file size: {total_size}")
+                print(f"File size: {total_size}")
                 for code in sorted(status_counts):
                     print(f"{code}: {status_counts[code]}")
 
     except KeyboardInterrupt:
-        print("\nKeyboard interruption detected. Exiting...")
+        print("\nKeyboard interruption\n")
 
 
 if __name__ == "__main__":
