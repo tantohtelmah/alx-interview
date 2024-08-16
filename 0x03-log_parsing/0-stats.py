@@ -8,6 +8,7 @@ import sys
 
 def parse_line(line):
     """ parse line """
+
     try:
         _, _, _, status_code, file_size = line.split()
         return int(status_code), int(file_size)
@@ -15,6 +16,8 @@ def parse_line(line):
         return None, None
 
 def main():
+    """ Main Function"""
+
     total_size = 0
     status_counts = {}
 
