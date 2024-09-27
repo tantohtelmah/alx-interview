@@ -1,4 +1,12 @@
+#!/usr/bin/python3
+"""
+initialisation
+"""
+
+
 def island_perimeter(grid):
+    """ Island perimeter"""
+
     rows = len(grid)
     cols = len(grid[0])
     perimeter = 0
