@@ -5,14 +5,18 @@ Minimum Operations
 
 
 def minOperations(n):
-    """ function"""
+    """ Functions """
 
-    dp = [float('inf')] * (n + 1)
-    dp[1] = 0
+    if n <= 1:
+        return 0
 
-    for i in range(2, n + 1):
-        for d in range(1, i // 2 + 1):
-            if i % d == 0:
-                dp[i] = min(dp[i], dp[d] + i // d)
+    operations = 0
+    factor = 2
 
-    return dp[n]
+    while n > 1:
+        while n % factor == 0:
+            operations += factor
+            n //= factor
+        factor += 1
+
+    return operations
