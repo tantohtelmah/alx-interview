@@ -17,7 +17,7 @@ def canUnlockAll(boxes):
     while keys:
         current_box = keys.pop()  # Get the last key
         for key in boxes[current_box]:
-            if key not in visited:
+            if key not in visited and key < len(boxes):
                 visited.add(key)
                 keys.append(key)
 
