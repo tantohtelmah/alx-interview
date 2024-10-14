@@ -1,42 +1,63 @@
 #!/usr/bin/python3
-"""
-parse line
-"""
 import sys
+import signal
+import re
 
+# Initialize variables
+total_size = 0
+status_counts = {
+    "200": 0,
+    "301": 0,
+    "400": 0,
+    "401": 0,
+    "403": 0,
+    "404": 0,
+    "405": 0,
+    "500": 0
+}
 
-def parse_line(line):
-    """ parse line """
+def print_stats():
+    """ Prints the current statistics """
 
-    try:
-        _, _, _, status_code, file_size = line.split()
-        return int(status_code), int(file_size)
-    except ValueError:
-        return None, None
+    print(f"File size: {total_size}")
+    for code in sorted(status_counts.keys()):
+        if status_counts[code] > 0:
+            print(f"{code}: {status_counts[code]}")
 
+def signal_handler(sig, frame):
+    """ Handles keyboard interruption """
 
-def main():
-    """ Main Function"""
+    print_stats()
+    sys.exit(0)
 
-    total_size = 0
-    status_counts = {}
+# Register the signal handler
+signal.signal(signal.SIGINT, signal_handler)
 
-    try:
-        for i, line in enumerate(sys.stdin, start=1):
-            status_code, file_size = parse_line(line)
-            if status_code is not None:
-                total_size += file_size
-                status_counts[status_code] = status_counts.get(status_code,
-                                                               0) + 1
+# Define the log line pattern
+log_pattern = re.compile(
+    r'^(?P<ip>[\d.]+) - \[.*?\] "GET /projects/260 HTTP/1.1" (?P<status>\d{3}) (?P<size>\d+)$'
+)
 
-            if i % 10 == 0:
-                print(f"File size: {total_size}")
-                for code in sorted(status_counts):
-                    print(f"{code}: {status_counts[code]}")
+line_count = 0
 
-    except KeyboardInterrupt:
-        print("\nKeyboard interruption\n")
+try:
+    for line in sys.stdin:
+        match = log_pattern.match(line)
+        if match:
+            status = match.group('status')
+            size = int(match.group('size'))
 
+            total_size += size
+            if status in status_counts:
+                status_counts[status] += 1
 
-if __name__ == "__main__":
-    main()
+            line_count += 1
+
+            if line_count % 10 == 0:
+                print_stats()
+
+except Exception as e:
+    print(f"An error occurred: {e}")
+
+finally:
+    print_stats()
